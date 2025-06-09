@@ -79,6 +79,7 @@ jobs:
           done < "$ENV_FILE"
 
       - name: Create, Publish, and Deploy Package
+        if: github.ref_name == 'dev'
         id: deploy
         uses: digital-ai/github-actions-deploy@v2.0.0
         with:
@@ -91,17 +92,18 @@ jobs:
           versionNumber: ${{ env.VERSION_NUMBER }}
           packageName:   ${{ env.PACKAGE_NAME }}
           environmentId: ${{ env.ENVIRONMENT_ID }}
-          rollback:      ${{ env.ROLLBACK }}
           deploymentPackageId: ${{ env.DEPLOYPACKAGEID }} 
+          rollback:      ${{ env.ROLLBACK }}
 
       - name: Deploy DAR Package
+        if: github.ref_name == 'staging' || github.ref_name == 'prod' || github.ref_name == 'main'
         id: deploy_pkg
         uses: digital-ai/github-actions-deploy@v2.0.0
         with:
           serverUrl:     ${{ vars.SERVERURL }}
           username:      ${{ secrets.USERNAME }}
           password:      ${{ secrets.PASSWORD }}
-          action:        'deploy'
+          action:        ${{ env.ACTION }}
           deploymentPackageId: ${{ env.DEPLOYPACKAGEID }} 
           environmentId:       ${{ env.ENVIRONMENT_ID }}
 
