@@ -58,8 +58,8 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        id: build
         if: github.ref_name == 'dev'
+        id: build
         run: ./gradlew buildAllJars --no-daemon --console=plain
 
       - name: Load environment based on branch
