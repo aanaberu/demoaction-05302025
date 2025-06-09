@@ -4,13 +4,41 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Target environment'
+        description: 'Select the environment'
         required: true
-        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+      action_type:
+        description: 'Select the action'
+        required: true
+        type: choice
+        options:
+          - build Publish Deploy
+          - build
+          - publish
+          - deploy
+
       version:
-        description: 'Version number'
+        description: 'Select the version'
         required: true
-        default: '1.0.0'
+        type: choice
+        options:
+          - 1.0.0
+          - 2.0.0
+          - 3.0.0
+
+      manifest_file:
+        description: 'Select the manifest file'
+        required: true
+        type: choice
+        options:
+          - manifest-dev.yaml
+          - manifest-staging.yaml
+          - manifest-prod.yaml
 
 jobs:
   build:
@@ -65,6 +93,17 @@ jobs:
           environmentId: ${{ env.ENVIRONMENT_ID }}
           rollback:      ${{ env.ROLLBACK }}
           deploymentPackageId: ${{ env.DEPLOYPACKAGEID }} 
+
+      - name: Deploy DAR Package
+        id: deploy_pkg
+        uses: digital-ai/github-actions-deploy@v2.0.0
+        with:
+          serverUrl:     ${{ vars.SERVERURL }}
+          username:      ${{ secrets.USERNAME }}
+          password:      ${{ secrets.PASSWORD }}
+          action:        'deploy'
+          deploymentPackageId: ${{ env.DEPLOYPACKAGEID }} 
+          environmentId:       ${{ env.ENVIRONMENT_ID }}
 
       - name: Show Action Outputs
         run: |
