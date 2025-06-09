@@ -77,6 +77,11 @@ jobs:
               echo "$line" >> $GITHUB_ENV
             fi
           done < "$ENV_FILE"
+          
+          echo "Selected Environment: ${{ github.event.inputs.environment }}"
+          echo "Selected Action: ${{ github.event.inputs.action_type }}"
+          echo "Selected Version: ${{ github.event.inputs.version }}"
+          echo "Selected Manifest File: ${{ github.event.inputs.manifest_file }}"
 
       - name: Create, Publish, and Deploy Package
         if: github.ref_name == 'dev'
