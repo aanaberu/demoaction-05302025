@@ -21,6 +21,7 @@ jobs:
 
       - name: Build with Gradle
         id: build
+        if: github.ref_name == 'dev'
         run: ./gradlew buildAllJars --no-daemon --console=plain
 
       - name: Load environment based on branch
@@ -53,6 +54,7 @@ jobs:
           packageName:   ${{ env.PACKAGE_NAME }}
           environmentId: ${{ env.ENVIRONMENT_ID }}
           rollback:      ${{ env.ROLLBACK }}
+          deploymentPackageId: ${{ env.DEPLOYPACKAGEID }} 
 
       - name: Show Action Outputs
         run: |
